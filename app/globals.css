@@ -169,9 +169,25 @@ button:disabled {
   letter-spacing: 0.08em;
 }
 
-.project-switcher b {
+.project-switcher > .dropdown-chevron {
   color: var(--muted);
-  font-size: 11px;
+}
+
+.dropdown-chevron {
+  display: inline-grid;
+  width: 12px;
+  height: 12px;
+  place-items: center;
+  vertical-align: middle;
+}
+
+.dropdown-chevron::before {
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  content: "";
+  transform: translateY(-1.5px) rotate(45deg);
 }
 
 .command-actions,
@@ -235,8 +251,10 @@ button:disabled {
 }
 
 .menu-caret {
+  display: grid;
   width: 27px;
   margin-left: -1px;
+  place-items: center;
   border-radius: 0 9px 9px 0;
   color: rgba(220, 255, 152, 0.65);
 }
@@ -259,7 +277,7 @@ button:disabled {
 }
 
 .primary-action span {
-  margin-left: 6px;
+  margin-left: 5px;
   opacity: 0.65;
 }
 
@@ -1005,7 +1023,13 @@ button:disabled {
   height: 116px;
   place-items: center;
   align-self: center;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
+
+.light-dial:active { cursor: grabbing; }
 
 .light-orbit {
   position: absolute;

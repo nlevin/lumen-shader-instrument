@@ -7,6 +7,7 @@ import {
   useState,
   type CSSProperties,
   type MutableRefObject,
+  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { DEFAULT_FRAGMENT_SHADER, VERTEX_SHADER } from "./shader";
 
@@ -913,6 +914,13 @@ export default function ShaderStudio() {
     />
   );
 
+  const setLightAngleFromPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - (rect.left + rect.width / 2);
+    const y = event.clientY - (rect.top + rect.height / 2);
+    updateValue("lightAngle", Math.atan2(y, x));
+  };
+
   const inspector = {
     form: (
       <>
@@ -1009,7 +1017,28 @@ export default function ShaderStudio() {
           {range("glow", "Edge radiance", 0, 1.8, 0.01)}
         </Module>
         <Module title="Directional light">
-          <div className="light-dial">
+          <div
+            className="light-dial"
+            role="slider"
+            aria-label="Directional light angle"
+            aria-valuemin={-180}
+            aria-valuemax={180}
+            aria-valuenow={Math.round((values.lightAngle * 180) / Math.PI)}
+            onPointerDown={(event) => {
+              event.currentTarget.setPointerCapture(event.pointerId);
+              beginGesture();
+              setLightAngleFromPointer(event);
+            }}
+            onPointerMove={(event) => {
+              if (event.currentTarget.hasPointerCapture(event.pointerId)) setLightAngleFromPointer(event);
+            }}
+            onPointerUp={(event) => {
+              setLightAngleFromPointer(event);
+              event.currentTarget.releasePointerCapture(event.pointerId);
+              endGesture();
+            }}
+            onPointerCancel={endGesture}
+          >
             <span className="light-orbit" />
             <span className="light-source" style={{ transform: `rotate(${values.lightAngle}rad) translateX(43px)` }} />
             <span className="light-core">✦</span>
@@ -1087,7 +1116,7 @@ export default function ShaderStudio() {
         <button className="project-switcher" type="button" onClick={() => setPresetsOpen((open) => !open)}>
           <span>{presetName}</span>
           <small>STUDY · {String(values.seed).padStart(4, "0")}</small>
-          <b>⌄</b>
+          <span className="dropdown-chevron" aria-hidden="true" />
         </button>
         <div className="command-actions">
           <div className="history-actions">
@@ -1096,7 +1125,7 @@ export default function ShaderStudio() {
           </div>
           <div className="menu-wrap">
             <button className="mutate-button" type="button" onClick={() => mutate("medium")}>✣ Mutate</button>
-            <button className="menu-caret" type="button" onClick={() => setMutateOpen((open) => !open)} aria-label="Mutation options">⌄</button>
+            <button className="menu-caret" type="button" onClick={() => setMutateOpen((open) => !open)} aria-label="Mutation options"><span className="dropdown-chevron" aria-hidden="true" /></button>
             {mutateOpen && (
               <div className="floating-menu mutate-menu">
                 {(["subtle", "medium", "wild", "palette", "structure"] as const).map((strength) => (
@@ -1110,7 +1139,7 @@ export default function ShaderStudio() {
           </div>
           <button className="quiet-action share-action" type="button" onClick={shareDesign}>Share</button>
           <div className="menu-wrap">
-            <button className="primary-action" type="button" onClick={() => setExportOpen((open) => !open)}>Export <span>⌄</span></button>
+            <button className="primary-action" type="button" onClick={() => setExportOpen((open) => !open)}>Export <span className="dropdown-chevron" aria-hidden="true" /></button>
             {exportOpen && (
               <div className="floating-menu export-menu">
                 <button type="button" onClick={() => { captureRef.current?.(); setExportOpen(false); }}><span>PNG frame</span><small>current resolution</small></button>
