@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -14,8 +15,8 @@
   --phosphor: #c8ff5a;
   --ember: #ff9b5a;
   --danger: #ff5f70;
-  --sans: var(--font-geist-sans), "Helvetica Neue", sans-serif;
-  --mono: var(--font-geist-mono), "SFMono-Regular", monospace;
+  --sans: var(--font-geist-sans, "Inter"), "Helvetica Neue", Arial, sans-serif;
+  --mono: var(--font-geist-mono, "SFMono-Regular"), "SFMono-Regular", Consolas, monospace;
 }
 
 * {

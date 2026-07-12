@@ -10,5 +10,11 @@ export default defineConfig({
     outDir: "../pages-dist",
     emptyOutDir: true,
     assetsDir: "",
+    rollupOptions: {
+      output: {
+        entryFileNames: "lumen.js",
+        assetFileNames: "lumen.[ext]",
+      },
+    },
   },
 });
