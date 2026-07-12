@@ -3,7 +3,6 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -889,11 +888,6 @@ export default function ShaderStudio() {
     showToast("Instrument reset");
   };
 
-  const resolutionLabel = useMemo(() => {
-    if (typeof window === "undefined") return "AUTO";
-    return window.devicePixelRatio > 1.25 ? "RETINA" : "NATIVE";
-  }, []);
-
   const range = (
     key: NumericKey,
     label: string,
@@ -1184,7 +1178,7 @@ export default function ShaderStudio() {
             <span className="fps-dot" />
             <strong>{fps} FPS</strong>
             <i />
-            <span>{resolutionLabel}</span>
+            <span>ADAPTIVE</span>
           </div>
           <div className="canvas-hud hud-bottom-left">
             <span className="pointer-icon">↗</span>
